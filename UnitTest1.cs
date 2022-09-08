@@ -47,5 +47,24 @@ namespace RestSharpTest
                 Console.WriteLine("id : " + e.id + " , Name: " + e.name + " Salary: " + e.salary);
             }
         }
+
+        //UC2:Ability to add a new Employee to the EmployeePayroll JSON Server
+        [TestMethod]
+        public void givenEmployee_OnPost_ShouldReturnAddedEmployee()
+        {
+            RestRequest request = new RestRequest("/employees", Method.POST);
+            JObject jobjectbody = new JObject();
+            jobjectbody.Add("name", "Clark");
+            jobjectbody.Add("salary", 15000);
+            request.AddParameter("application/json", jobjectbody, ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+
+            Assert.AreEqual(response.StatusCode, System.Net.HttpStatusCode.Created);
+            Employee dataResponse = JsonConvert.DeserializeObject<Employee>(response.Content);
+            Assert.AreEqual("Clark", dataResponse.name);
+            Assert.AreEqual("15000", dataResponse.salary);
+            Console.WriteLine(response.Content);
+        }
     }
 }
