@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using System.Net;
 
 namespace RestSharpTest
 {
@@ -65,6 +66,38 @@ namespace RestSharpTest
             Assert.AreEqual("Clark", dataResponse.name);
             Assert.AreEqual("15000", dataResponse.salary);
             Console.WriteLine(response.Content);
+        }
+
+        //UC3:- Ability to add multiple Employee to  the EmployeePayroll JSON Server.
+        [TestMethod]
+        public void GivenMultipleEmployee_OnPost_ThenShouldReturnEmployeeList()
+        {
+            // Arrange
+            List<Employee> employeeList = new List<Employee>();
+            employeeList.Add(new Employee { name = "Vinaya", salary = "15000" });
+            employeeList.Add(new Employee { name = "Ajaya kumar", salary = "7000" });
+            employeeList.Add(new Employee { name = "Powan", salary = "9000" });
+            employeeList.Add(new Employee { name = "Swathi", salary = "12000" });
+            // Iterate the loop for each employee
+            foreach (var emp in employeeList)
+            {
+                // Initialize the request for POST to add new employee
+                RestRequest request = new RestRequest("/employees", Method.POST);
+                request.RequestFormat = DataFormat.Json;
+
+                //Added parameters to the request object such as the content-type and attaching the jsonObj with the request
+                request.AddBody(emp);
+
+                //Act
+                IRestResponse response = client.ExecuteAsync(request).Result;
+
+                //Assert
+                Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+                Employee employee = JsonConvert.DeserializeObject<Employee>(response.Content);
+                Assert.AreEqual(emp.name, employee.name);
+                Assert.AreEqual(emp.salary, employee.salary);
+                System.Console.WriteLine(response.Content);
+            }
         }
     }
 }
