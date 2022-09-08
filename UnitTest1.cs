@@ -99,5 +99,34 @@ namespace RestSharpTest
                 System.Console.WriteLine(response.Content);
             }
         }
+
+        /*UC4:- Ability to Update Salary in Employee Payroll JSON Server.
+               - Firstly Update the Salary in Memory.
+               - Post that Use JSON Server and RESTSharp to Update the salary.*/
+        [TestMethod]
+        public void OnCallingPutAPI_ReturnEmployeeObject()
+        {
+            // Arrange
+            // Initialize the request for PUT to add new employee
+            RestRequest request = new RestRequest("/employees/12", Method.PUT);
+            request.RequestFormat = DataFormat.Json;
+
+            request.AddBody(new Employee
+            {
+                name = "Mandara",
+                salary = "65000"
+            });
+
+            // Act
+            IRestResponse response = client.Execute(request);
+
+            // Assert
+            Assert.AreEqual(response.StatusCode, System.Net.HttpStatusCode.OK);
+            Employee employee = JsonConvert.DeserializeObject<Employee>(response.Content);
+            Assert.AreEqual("Mandara", employee.name);
+            Assert.AreEqual("65000", employee.salary);
+            Console.WriteLine(response.Content);
+        }
+
     }
 }
