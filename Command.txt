@@ -1,1 +1,85 @@
-Welcome to EmployeeRest SharpTest
+            ### C-Sharp Web API Introduction & Testing ###
+
+API(Application Programming Interface)
+API gives the leverage to write on Interface which can talk/connec/which can make a bridge between your repository i.e database to your business logic.
+
+What is Node.js and npm?
+* Node.js is an environment which you can uses for compiling &  running JavaScript code in command line and more importantly to create web-services & 
+networked appications.
+* NPM is a "Package manager" that makes installing Node "packages" fast and easy.
+
+What is JSON Server?
+* JSON Server is a Node Module that you can use to create demo REST json webservice in less than a minute. All you need is a JSON file for sample data.
+* Installing JSON Server.
+npm install -g json-server
+
+*Check JSON SERVER version
+json-server -v
+
+Note:-
+* node -v  --> Check whether node.js is install or not
+* npm install -g json-server   --> Install json server.
+
+
+## Run JSON Server ##
+
+*Step 1:- Create empDB.json file
+
+*Step 2:- Run JSON Server. This will create REST API for empDB.
+json-server --watch empDB.json
+
+*REST API are essentially for CRUD operation i.e.- Create, Read, Update& Delete.
+*Next  steps we would call the json server to Get all Employees, to Add Employee and finally to update and Delete Employees.
+
+## REST API using JSON Server from Terminal ##
+
+*Step 3:- Get all Employees using curl Command
+curl -X GET -H "Content-Type: application/json" "http://localhost:3000/employees"
+
+*Step 4:- Get Employee Details with id 1
+curl -X GET -H "Content-Type: application/json" "http://localhost:3000/employees/1"
+
+*Step 5:- Adding New Employee Lisa. Here you will notice HTTP Method POST is used as well as using pd option JSON is passed in the Body.
+curl -X POST -H "Content-Type: application/json" -d '{"name":"Lisa","salary":"5000"}' "http://localhost:3000/employees"
+
+*Step 6:- Update Employee Salary for Lisa to 8000 for id 3
+curl -X PUT -H "Content-Type: application/json" -d '{"name":"Lisa","salary":"8000"}' "http://localhost:3000/employees/3"
+
+## Custom Routes for REST API ##
+
+*Step 7:- Delete Employee with Employee id 2
+curl -X DELETE -H "Content-Type: application/json" "http://localhost:3000/employees/2"
+
+Step 8:-
+1)Create Custom Routes for CRUD REST APIs
+{
+  "/employees/list": "/employees",
+  "/employees/get/:id": "/employees/:id", 
+  "/employees/create": "/employees", 
+  "/employees/update/:id": "/employees/:id", 
+  "/employees/delete/:id": "/employees/:id" 
+}
+
+2) Starting JSON Server with new Routes and Port...	
+json-server --port 4000 --routes routes.json --watch empDB.json
+
+### Custom REST API ###
+GET:-  curl -X GET -H "Content-Type: application/json" "http://localhost:4000/employees/List"
+
+GET/id:- curl -X GET -H "Content-Type: application/json" "http://localhost:4000/employees/get/6"
+
+POST:- curl -X POST -H "Content-Type: application/json" -d '{"name":"Max","Salary":"8000"}' "http://localhost:4000/employees/create"
+
+PUT:- curl -X PUT -H "Content-Type: application/json" -d '{"name":"Max","Salary":"9000"}' "http://localhost:4000/employees/update/11"
+
+DELETE:- curl -X DELETE -H "Content-Type: application/json" "http://localhost:4000/employees/delete/11"
+
+JSON server provides some other useful options such as sorting, searching and pagination.
+
+
+  ## On Postman App ##
+
+GET Request --> localhost:4000/employees/List
+POST Request --> localhost:4000/employees/create
+PUT Request --> localhost:4000/employees/update/11
+DELETE Request --> localhost:4000/employees/delete/11
